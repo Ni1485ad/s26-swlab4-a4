@@ -16,10 +16,17 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
 
-      - name: Terraform Checks for all days
+      - name: Terraform Checks (skip input-required folders)
         run: |
           for dir in terraform-lab/day*; do
-            echo "Running in $dir"
+            echo "Checking $dir"
+
+            # Skip day2 (requires tfvars input)
+            if [[ "$dir" == *"day2"* ]]; then
+              echo "Skipping $dir (requires input)"
+              continue
+            fi
+
             cd $dir
 
             terraform init
